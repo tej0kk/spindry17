@@ -22,6 +22,7 @@
                                     <th>Subitle</th>
                                     <th>Background</th>
                                     <th>Status</th>
+                                    <th>Aksi</th>
                                 </thead>
                                 <tbody>
                                     @foreach ($heroes as $hero)
@@ -31,6 +32,14 @@
                                             <td>{{ $hero->subtitle }}</td>
                                             <td>{{ $hero->background }}</td>
                                             <td>{{ $hero->status }}</td>
+                                            <td>
+                                                <a href="{{url('/hero/'.$hero->id.'/edit')}}" class="btn btn-warning">edit</a>
+                                                <form action="{{url('/hero/'.$hero->id)}}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button class="btn btn-danger">hapus</button>
+                                                </form>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>

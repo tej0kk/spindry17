@@ -21,9 +21,9 @@ Route::get('/profile', function () {
     return view('pages.profile');
 });
 
-Route::get('/hero',[HeroController::class, 'index']);
+Route::get('/hero', [HeroController::class, 'index']);
 Route::get('/hero/create', [HeroController::class, 'create']);
 Route::post('/hero', [HeroController::class, 'store']);
-Route::get('/hero/edit', [HeroController::class, 'edit']);
-Route::put('/hero', [HeroController::class, 'update']);
-Route::delete('/hero', [HeroController::class, 'destroy']);
+Route::get('/hero/{hero}/edit', [HeroController::class, 'edit']);
+Route::put('/hero/{hero}', [HeroController::class, 'update']);
+Route::delete('/hero/{hero}', [HeroController::class, 'destroy']);
