@@ -10,11 +10,15 @@ class HeroController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $heroes = Hero::all();
-        // return $heroes;
-        return view('pages.hero', compact('heroes'));
+        $q = $request->q;
+        if ($q) {
+            $heroes = Hero::where('title', 'like', '%' . $q . '%')->get();
+        } else {
+            $heroes = Hero::all();
+        }
+        return view('pages.hero', compact('heroes', 'q'));
     }
 
     /**
@@ -33,11 +37,25 @@ class HeroController extends Controller
         // return $request;
         // Hero::create($request->all());
 
-        $request->validate([
-            'title' => 'required|min:5|max:10',
-            'subtitle' => 'required|min:10|max:30',
-            'background' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
-        ]);
+        $request->validate(
+            [
+                'title' => 'required|min:5|max:10',
+                'subtitle' => 'required|min:10|max:50',
+                'background' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            ],
+            [
+                'title.required' => 'Kolom TITLE tidak boleh kosong om !',
+                'title.min' => 'Kolom TITLE terlalu pendek !',
+                'title.max' => 'Kolom TITLE terlalu panjang !',
+                'subtitle.required' => 'Kolom SUBTITLE tidak boleh kosong om !',
+                'subtitle.min' => 'Kolom SUBTITLE terlalu pendek !',
+                'subtitle.max' => 'Kolom SUBTITLE terlalu panjang !',
+                'background.required' => 'Kolom BACKGROUND tidak boleh kosong !',
+                'background.image' => 'Kolom BACKGROUND harus file image !',
+                'background.mimes' => 'File pada kolom BACKGROUND harus jpeg, png, gif atau svg !',
+                'background.max' => 'File pada kolom BACKGROUND terlalu besar !',
+            ]
+        );
 
         $background = $request->file('background');
         $filename = time() . '-' . rand() . '-' . $background->getClientOriginalName();
@@ -52,7 +70,7 @@ class HeroController extends Controller
             'status' => $status,
         ]);
 
-        return redirect('/hero');
+        return redirect('/hero')->with('success', $request->title . ' berhasil ditambahkan');
     }
 
     /**
@@ -78,15 +96,25 @@ class HeroController extends Controller
     public function update(Request $request, Hero $hero)
     {
         // return $request;
-        $request->validate([
-            'title' => 'required|min:5|max:10',
-            'subtitle' => 'required|min:10|max:50',
-            // 'background' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
-        ]);
-        
+        $request->validate(
+            [
+                'title' => 'required|min:5|max:10',
+                'subtitle' => 'required|min:10|max:50',
+                // 'background' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            ],
+            [
+                'title.required' => 'Kolom TITLE tidak boleh kosong om !',
+                'title.min' => 'Kolom TITLE terlalu pendek !',
+                'title.max' => 'Kolom TITLE terlalu panjang !',
+                'subtitle.required' => 'Kolom SUBTITLE tidak boleh kosong om !',
+                'subtitle.min' => 'Kolom SUBTITLE terlalu pendek !',
+                'subtitle.max' => 'Kolom SUBTITLE terlalu panjang !',
+            ]
+        );
+
         $status = $request->has('status') ? 'show' : 'hide';
         if ($request->has('background')) {
-            unlink(public_path('/img/heroes/'.$hero->background));
+            unlink(public_path('/img/heroes/' . $hero->background));
             $background = $request->file('background');
             $filename = time() . '-' . rand() . '-' . $background->getClientOriginalName();
             $background->move(public_path('/img/heroes/'), $filename);
@@ -96,24 +124,24 @@ class HeroController extends Controller
                 'background' => $filename,
                 'status' => $status,
             ]);
-        }else{
+        } else {
             Hero::where('id', $hero->id)->update([
                 'title' => $request->title,
                 'subtitle' => $request->subtitle,
                 'status' => $status,
             ]);
         }
-        
+
         return redirect('/hero');
     }
-    
+
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Hero $hero)
     {
-        if(file_exists(asset('/img/heroes/'.$hero->background))){
-            unlink(public_path('/img/heroes/'.$hero->background));
+        if (file_exists(asset('/img/heroes/' . $hero->background))) {
+            unlink(public_path('/img/heroes/' . $hero->background));
         }
         Hero::destroy('id', $hero->id);
         // Hero::where('id', $hero->id)->delete();

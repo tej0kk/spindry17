@@ -4,6 +4,7 @@
 <head>
     <title>@yield('title') - SPINDRY</title>
     @include('components.header')
+    @stack('style')
 </head>
 
 <body>
@@ -31,6 +32,7 @@
     <script src="{{ asset('assets/js/pages/dashboard.js') }}"></script>
 
     <script src="{{ asset('assets/js/mazer.js') }}"></script>
+    @stack('scriptf')
 </body>
 
 </html>
