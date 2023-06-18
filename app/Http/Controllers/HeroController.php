@@ -13,12 +13,14 @@ class HeroController extends Controller
     public function index(Request $request)
     {
         $q = $request->q;
+        $pagination = $request->has('pagination') ? $request->pagination : 10;
         if ($q) {
-            $heroes = Hero::where('title', 'like', '%' . $q . '%')->get();
+            $heroes = Hero::where('title', 'like', '%' . $q . '%')->paginate($pagination);
         } else {
-            $heroes = Hero::all();
+            $heroes = Hero::paginate($pagination);
         }
-        return view('pages.hero', compact('heroes', 'q'));
+        // return $heroes;
+        return view('pages.hero', compact('heroes', 'q', 'pagination'));
     }
 
     /**
@@ -63,12 +65,15 @@ class HeroController extends Controller
 
         $status = $request->has('status') ? 'show' : 'hide';
 
-        Hero::create([
-            'title' => $request->title,
-            'subtitle' => $request->subtitle,
-            'background' => $filename,
-            'status' => $status,
-        ]);
+        // for($i=0;$i<100;$i++)
+        // {
+            Hero::create([
+                'title' => $request->title,
+                'subtitle' => $request->subtitle,
+                'background' => $filename,
+                'status' => $status,
+            ]);
+        // }
 
         return redirect('/hero')->with('success', $request->title . ' berhasil ditambahkan');
     }
@@ -132,7 +137,7 @@ class HeroController extends Controller
             ]);
         }
 
-        return redirect('/hero');
+        return redirect('/hero')->with('success', $request->title . ' berhasil diubah');
     }
 
     /**
@@ -145,6 +150,6 @@ class HeroController extends Controller
         }
         Hero::destroy('id', $hero->id);
         // Hero::where('id', $hero->id)->delete();
-        return redirect('/hero');
+        return redirect('/hero')->with('success', $hero->title . ' berhasil dihapus');
     }
 }

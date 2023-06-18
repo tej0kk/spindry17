@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HeroController;
+use App\Http\Controllers\PromotionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,3 +28,5 @@ Route::post('/hero', [HeroController::class, 'store']);
 Route::get('/hero/{hero}/edit', [HeroController::class, 'edit']);
 Route::put('/hero/{hero}', [HeroController::class, 'update']);
 Route::delete('/hero/{hero}', [HeroController::class, 'destroy']);
+
+Route::resource('/promotion', PromotionController::class);
