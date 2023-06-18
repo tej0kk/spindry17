@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Hero;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class HeroController extends Controller
 {
@@ -73,6 +74,12 @@ class HeroController extends Controller
                 'background' => $filename,
                 'status' => $status,
             ]);
+            // DB::table('hero')->insert([
+            //     'title' => $request->title,
+            //     'subtitle' => $request->subtitle,
+            //     'background' => $filename,
+            //     'status' => $status,
+            // ]);
         // }
 
         return redirect('/hero')->with('success', $request->title . ' berhasil ditambahkan');
