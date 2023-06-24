@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\HeroController;
 use App\Http\Controllers\PromotionController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,18 +16,23 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/register', [UserController::class, 'createRegister']);
+Route::post('/register', [UserController::class, 'storeRegister']);
+
+Route::get('/login', [UserController::class, 'login'])->name('login');
+Route::post('/login', [UserController::class, 'prosesLogin']);
+
 Route::get('/dashboard', function () {
     return view('pages.dashboard');
-});
-Route::get('/profile', function () {
-    return view('pages.profile');
-});
+})->middleware('auth');
 
-Route::get('/hero', [HeroController::class, 'index']);
-Route::get('/hero/create', [HeroController::class, 'create']);
-Route::post('/hero', [HeroController::class, 'store']);
-Route::get('/hero/{hero}/edit', [HeroController::class, 'edit']);
-Route::put('/hero/{hero}', [HeroController::class, 'update']);
-Route::delete('/hero/{hero}', [HeroController::class, 'destroy']);
+Route::get('/hero', [HeroController::class, 'index'])->middleware('auth');
+Route::get('/hero/create', [HeroController::class, 'create'])->middleware('auth');
+Route::post('/hero', [HeroController::class, 'store'])->middleware('auth');
+Route::get('/hero/{hero}/edit', [HeroController::class, 'edit'])->middleware('auth');
+Route::put('/hero/{hero}', [HeroController::class, 'update'])->middleware('auth');
+Route::delete('/hero/{hero}', [HeroController::class, 'destroy'])->middleware('auth');
 
-Route::resource('/promotion', PromotionController::class);
+Route::resource('/promotion', PromotionController::class)->middleware('auth');
+
+Route::get('/logout', [UserController::class, 'logout'])->name('logout')->middleware('auth');
