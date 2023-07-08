@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Display;
 use App\Models\Promotion;
 use Illuminate\Http\Request;
 
@@ -54,9 +55,7 @@ class PromotionController extends Controller
             ]
         );
 
-        $picture = $request->file('picture');
-        $filename = time() . '-' . rand() . '-' . $picture->getClientOriginalName();
-        $picture->move(public_path('/img/promotions/'), $filename);
+        $filename = Display::upload_image($request->file('picture'), 'promotions');
 
         $status = $request->has('status') ? 'show' : 'hide';
 

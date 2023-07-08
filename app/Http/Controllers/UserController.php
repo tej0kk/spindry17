@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Providers\AuthServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -65,7 +64,7 @@ class UserController extends Controller
         if(Auth::attempt($credential)){
             return redirect('/dashboard');
         }else{
-            return redirect()->back();
+            return redirect()->back()->with('gagal', 'Email atau Password tidak sesuai');
         }
     }
 

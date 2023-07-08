@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{{ asset('assets/vendors/bootstrap-icons/bootstrap-icons.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/pages/auth.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
@@ -22,6 +23,12 @@
                     </div>
                     <h1 class="auth-title">Log In</h1>
                     <p class="auth-subtitle mb-5">Input your data to register to our website.</p>
+
+                    @if (session()->has('gagal'))
+                        <div class="alert alert-warning" role="alert">
+                            <i class="fa-solid fa-circle-xmark"></i> {{ session('gagal') }}
+                        </div>
+                    @endif
 
                     <form action="{{ url('/login') }}" method="POST">
                         @csrf
@@ -54,7 +61,7 @@
                         <button type="submit" class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Login</button>
                     </form>
                     <div class="text-center mt-5 text-lg fs-4">
-                        <p class='text-gray-600'>Don't have an account? <a href="{{url('/register')}}"
+                        <p class='text-gray-600'>Don't have an account? <a href="{{ url('/register') }}"
                                 class="font-bold">Register</a>.</p>
                     </div>
                 </div>
